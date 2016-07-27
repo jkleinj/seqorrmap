@@ -1,0 +1,22 @@
+/*=============================================================================
+seq.h : sequence
+Copyright (C) 2008 Jens Kleinjung
+Read the COPYING file for license information.
+===============================================================================*/
+  
+#ifndef SEQ_H
+#define SEQ_H
+
+/*____________________________________________________________________________*/
+/* sequence */
+typedef struct  
+{
+    char *name; /* sequence name */
+    char *res; /* array of residues = sequence */
+	int *dgap; /* (binary) distribution of gaps */
+	int *cgap; /* cumulative distribution of gaps */
+    int nGap; /* total number of gaps */
+    int length; /* length of sequence */
+} Seq;
+
+#endif

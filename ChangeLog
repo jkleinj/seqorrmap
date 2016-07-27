@@ -1,0 +1,100 @@
+- 1.4.3
+Sun Oct 13 22:44:59 BST 2013
+	Implemented combination of mapped correlations.
+
+- 1.4.2
+Fri Sep 27 14:05:05 BST 2013
+	Allowing recursive mapping on duplicated domains to accommodate two selection lists.
+	Enabled internal chain naming (A,B,...) independent of PDB chain ID.
+
+- 1.4.1
+Mon Sep 16 16:50:44 BST 2013
+	Introduced two selection lists.
+
+- 1.4.0
+Tue Jun 18 16:53:28 BST 2013
+	Added corrlation matrix output.
+	Added more options to residue selection.
+
+- 1.3.4
+Fri May 31 11:23:59 BST 2013
+	Added selection pair assertion.
+	Added firstSeqResidue switch decrement.
+	Corrected incorrect sequence number in output seqorrmap_corr.dat.
+
+-1.3.3
+Fri May 31 11:23:22 BST 2013
+	Correction in secetion list assertion.
+
+-1.3.2
+Thu May 30 11:04:33 BST 2013
+	Mismatch output goes to stderr.
+	Strictness switches corrected.
+	Correlations are mapped to one chain if distance difference
+		to homo-oligomeric chains is marginal.
+
+-1.3.1
+Tue May 28 18:41:49 BST 2013
+	Bug fix: works now with empty selection list.
+
+-1.3.0
+Tue May 28 12:16:07 BST 2013
+	Printing out chain specification and atom type to VMD file.
+
+-1.2.5
+Sat May 25 09:57:31 BST 2013
+	Added selection list.
+
+-1.2.4
+Tue May 21 14:33:36 BST 2013
+	Improved selection filter handling.
+
+-1.2.3
+Sun May 12 20:26:54 BST 2013
+	Print minimal atom distance between residues.
+	Draw correlations between shortest distance in homo-oligomers.
+
+-1.2.2
+Tue Apr 30 14:55:23 BST 2013
+	Added more information to correlation output file.
+
+-1.2.1
+Wed Apr 24 14:27:59 BST 2013
+	VMD output respects new selection rules.
+
+- 1.2.0
+Wed Apr  3 10:51:58 BST 2013
+	Allowing for gapped target sequence.
+
+- 1.1.4
+Mon Apr  1 23:43:15 BST 2013
+	Selecting correlations on the basis of sequence regions.
+
+- 1.1.3
+Wed Mar 27 14:24:55 GMT 2013
+	Selecting correlations on the basis of sequence distances.
+
+- 1.1.2
+Wed Mar 27 14:24:55 GMT 2013
+	Improved log output, fgets behaviour, vmd output.
+
+- 1.1.1
+Tue Mar 26 10:26:02 GMT 2013
+	Modified debugging output.
+
+- 1.1.0
+Thu Mar 21 15:29:20 GMT 2013
+	Now reading updated correlation data format.
+
+- 1.0.3
+Wed Mar 20 11:53:51 GMT 2013
+	Added switch for 'strict' behaviour.
+
+- 1.0.2
+Tue Mar 19 13:29:00 GMT 2013
+	Added switch and function for TCL sctript output.
+
+- 1.0.1 
+Tue Mar 12 16:53:20 GMT 2013
+	Added switch to better control cutoff values.
+

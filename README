@@ -1,0 +1,157 @@
+
+seqorrmap : map sequence correlations onto structure
+---------------------------------------------
+
+GENERAL
+seqorrmap maps sequence-derived residue-pair correlations onto a corresponding PDB structure.
+Correlations can be created with the program PSICOV, for example.
+It is mandatory to specify a file containing residue pair correlations and a PDB file
+that contains the same sequence the correlations were derived for.
+seqorrmap verifies that (adjusted) sequence numbers given in the correlation file exist
+in the structure and that the amino acid types match. 
+If residues in the correlation file cannot be mapped, the program warns or exits,
+depending on the strictness settings (see below).
+Two switches are provided to adjust alignment (transformation) of residues of 
+the sequence in the correlation file with residues contained in the structure:
+'firstSeqResidue' and 'firstStrResidue'.
+
+The first residue number of the correlation file is '0' by definition and 
+ususally that sequence starts with a residue that is contained in the structure.
+In this case, only 'firstStrResidue' needs to be provided to obtain a correct alignment,
+where 'firstResidue' is the residue position in the structure file that corresponds to the
+first ('0') residue in the correlation file.
+Otherwise, if the correlation sequence starts N-terminal to the structure,
+'firstSeqResidue' needs to be provided additionally
+(keeping in mind to start the residue count in the correlation file at '0').
+
+It is crucial to check the output logs for mapping errors.
+
+FILTERS
+seqorrmap provides a range of selection filters to focus the analysis on specific
+sets of correlations. 
+Correlations can be filtered by the following selection criteria: 
+- sequence distance between correlated residues: sLoCutoff < seq. distance < sUpCutoff
+- correlation strength between correlated residues: cLoCutoff < correlation < cUpCutoff
+- radius (spatial distance) between correlated residues: rLoCutoff < radius < rUpCutoff
+- residue selection lists. Residue numbers in the selection lists refer to those of the structure.
+  There are two residue selection lists, specified by the command line switches:
+  '--select1' to select the range of first residues in correlated residue pairs, and
+  '--select2' to select equivalently the range of second residues.
+  An example for a residue selection looks like this:
+  --select1 A:5-6 A:19 --select2 B:50
+  This would select only correlations with residues A:5, A:6 and A:19 as first
+  residues and B:50 as second residue in a residue-pair correlation.
+
+Note that the numbering in selection lists refers to the PDB structure numbering.
+
+ADVANCED MAPPING FOR REPLICAS
+Sometimes protein assemblies are composed of repeated identical replicas,
+which have the same chain ID names. To differentiate between the individual replicas 
+in the mapping process, one can use the '--systemChain' switch. This triggers
+the program to use an internal chain numbering system running invariably like 'A','B',...
+for the given chains, where a new chain is detected during input whenever chain ID 
+in the PDB file changes and/or a 'TER' flag is enccountered.
+These internal chain names are then printed to the terminal 
+output (stdout). When '--systemChain' is given, the user needs to use the 
+internal chain names in the selection strings of '--select1' and '--select2'.
+
+VMD
+Those correlations that pass the filters are selected and printed out (--corrOut).
+A Tcl script is generated to map the selected correlations onto the structure for 
+visualisation (--tclOut).
+The VMD program can be used to load the Tcl script.
+
+CONSISTENCY
+seqorrmap checks for the existence of the input data correlations in the target structure
+on the basis of the specified sequence positions and amino acid types. 
+
+'--strict_nr' triggers the program to exit if the residue numbers specified in
+the correlation input data line (adjusted by --firstResidue)
+cannot be mapped onto the target structure, otherwise the program's 
+default behaviour is to skip the input data line and to continue.
+
+'--strict_aa' triggers the program skip the input data line if the specified 
+amino acids are not found in the target structure, otherwise the default behaviour is
+to map the contact and print a warning about the amino acid mismatch.
+
+OUTPUT
+'seqorrmap.out' contains detailed information about all successfully mapped correlations.
+'seqorrmap.err' contains detailed information about all UNsuccessfully mapped correlations.
+'seqorrmap_corr.dat' contains the list of (cutoff-)selected correlations.
+'seqorrmap.vmd' contains a TCL script to plot the structure and selected correlations in VMD.
+'seqorr.mat' contains a symmetric matrix of corralation values scaled to the value range [-1 1].
+'seqorrcomp.mat' is alike, but scaled to the value range [0 1] and expressed as complement 1 - [0 1].
+
+
+Install / Uninstall
+-------------------
+Please read the general 'INSTALL' instructions.
+The configuration option '--enable-debug' creates a debuggable binary.
+The option '--enable-profiling' enables profiling with 'gprof'. 
+
+For code documentation execute 'doxygen doxygen.cfg' in the 'src' directory.
+Documentation files are created in 'doc/html' and 'doc/latex'.
+The latex documentation is completed by executing 'make pdf' in the 
+'doc/latex' directory, which creates 'refman.ps' and 'refman.pdf'.
+
+
+Usage
+-----
+
+seqorrmap [--pdb ...] [--corr ...] [OPTIONS ...]
+	   --pdbIn <PDB input>				(mode: mandatory, type: char  , default: void)
+	   --corr <seqorr correlation input>		(mode: mandatory, type: char  , default: void)
+	   --gappedSeq <gapped target sequence>		(mode: optional , type: char  , default: void)
+	   --rLoCutoff <lower RMSD cutoff>		(mode: optional , type: float , default: 0.1 Angstrom)
+	   --rUpCutoff <upper RMSD cutoff>		(mode: optional , type: float , default: FLT_MAX Angstrom)
+	   --cLoCutoff <lower correlation cutoff>	(mode: optional , type: float , default: -FLT_MAX)
+	   --cUpCutoff <upper correlation cutoff>	(mode: optional , type: float , default: FLT_MAX)
+	   --sLoCutoff <lower sequence distance cutoff>	(mode: optional , type: int   , default: 0)
+	   --sUpCutoff <upper sequence distance cutoff>	(mode: optional , type: int   , default: INT_MAX)
+	   --firstSeqResidue <seq residue number>	(mode: optional , type: int   , default: 0)
+	   --firstStrResidue <str residue number>	(mode: optional , type: int   , default: 0)
+	   --strict_aa					(mode: optional , type: no_arg, default: off)
+	   --strict_nr					(mode: optional , type: no_arg, default: off)
+	   --silent					(mode: optional , type: no_arg, default: off)
+	   --pdbOut <PDB output>			(mode: optional , type: char  , default: seqorrmap.pdb)
+	   --corrOut <corr output>			(mode: optional , type: char  , default: seqorrmap_corr.dat)
+	   --tclOut <TCL output>			(mode: optional , type: char  , default: seqorrmap.vmd)
+	   --corrmatOut <matrix output>			(mode: optional , type: char  , default: seqorrmap.mat)
+	   --corrcompmatOut <matrix output>			(mode: optional , type: char  , default: seqorrmap_comp.mat)
+	   --select1 <residue selection list>		(mode: optional , type: int   , default: OFF (INT_MIN))
+	   --select2 <residue selection list>		(mode: optional , type: int   , default: OFF (INT_MIN))
+		--systemChain				(mode: optional , type: no_arg, default: off)
+	   --cite					(mode: optional , type: no_arg, default: off)
+	   --version					(mode: optional , type: no_arg, default: off)
+	   --help
+
+A typical execution line would look like this:
+seqorrmap --pdbIn 0XYZ.pdb --corr seqorr_corr.dat --cLoCutoff 0.8
+
+The same with logging of the stdout and stderr streams:
+seqorrmap --pdbIn 0XYZ.pdb --corr seqorr_corr.dat --cLoCutoff 0.8 > >(tee stdout.log) 2> >(tee stderr.log >&2)
+
+
+-------------------------------------------------------------------------------
+Copyright (C) 2012-2013 Jens Kleinjung
+
+Availability
+------------
+The program is made available under the GNU Public License for academic
+scientific purposes, under the condition that proper acknowledgement
+is made to the authors of the program in publications resulting from the use
+of the program.
+
+License
+-------
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
