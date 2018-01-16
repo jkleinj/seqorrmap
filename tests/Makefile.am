@@ -8,8 +8,6 @@ noinst_DATA = \
 	test2.dat \
 	test3.dat \
 	test4.dat \
-	test5.dat \
-	test5.fasta \
 	1LKV.pdb
 
 noinst_SCRIPTS = \
@@ -17,8 +15,7 @@ noinst_SCRIPTS = \
 	test1.sh \
 	test2.sh \
 	test3.sh \
-	test4.sh \
-	test5.sh
+	test4.sh
 
 EXTRA_DIST = $(noinst_DATA) $(noinst_SCRIPTS)
 
